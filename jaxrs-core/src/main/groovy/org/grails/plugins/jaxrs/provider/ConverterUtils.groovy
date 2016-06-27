@@ -19,6 +19,7 @@ import grails.converters.JSON
 import grails.converters.XML
 import grails.core.GrailsApplication
 import groovy.json.JsonSlurper
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.databinding.xml.GPathResultMap
 import org.grails.web.converters.configuration.ConvertersConfigurationHolder
@@ -31,6 +32,7 @@ import javax.ws.rs.core.MultivaluedMap
  *
  * @author Martin Krasser
  */
+@CompileStatic
 @Slf4j
 class ConverterUtils {
     /**
@@ -40,9 +42,8 @@ class ConverterUtils {
      * @return charset name.
      */
     static String getDefaultEncoding(GrailsApplication application) {
-        def encoding = application.config.grails.converters.encoding
         // TODO: use platform encoding if application doesn't provide
-        encoding ? encoding : 'UTF-8'
+        application.config.getProperty('grails.converters.encoding', String, 'UTF-8')
     }
 
     /**
@@ -51,10 +52,7 @@ class ConverterUtils {
      */
     static String getDefaultXMLEncoding(GrailsApplication application) {
         def encoding = ConvertersConfigurationHolder.getConverterConfiguration(XML).encoding
-        if (!encoding) {
-            return getDefaultEncoding(application)
-        }
-        encoding
+        encoding ?: getDefaultEncoding(application)
     }
 
     /**
@@ -63,10 +61,7 @@ class ConverterUtils {
      */
     static String getDefaultJSONEncoding(GrailsApplication application) {
         def encoding = ConvertersConfigurationHolder.getConverterConfiguration(JSON).encoding
-        if (!encoding) {
-            return getDefaultEncoding(application)
-        }
-        encoding
+        encoding ?: getDefaultEncoding(application)
     }
 
     /** Extracts encoding from HTTP headers or MediaType parameters */
@@ -74,17 +69,15 @@ class ConverterUtils {
         // if HTTP headers specify the charset and this was parsed into the MediaType object, return the charset from MediaType
         // Jersey parses http headers into MediaType object
         if (mediaType.parameters['charset']) {
-            String encoding = mediaType.parameters['charset'];
-            return encoding
+            return mediaType.parameters['charset']
         }
 
         // Restlet does not parse the headers into MediaType so we need to extract them manually
-        def contentTypeHeaderKey = httpHeaders.keySet().find { key -> key.toLowerCase() == 'content-type' }
+        def contentTypeHeaderKey = httpHeaders.keySet().find {  key -> ((String)key).toLowerCase() == 'content-type' }
         if (contentTypeHeaderKey) {
             String contentTypeHeaderValue = httpHeaders.getFirst(contentTypeHeaderKey)
             if (contentTypeHeaderValue.contains('charset=')) {
-                String encoding = contentTypeHeaderValue.substring(contentTypeHeaderValue.indexOf('charset=') + 'charset='.length())
-                return encoding
+                return contentTypeHeaderValue.substring(contentTypeHeaderValue.indexOf('charset=') + 'charset='.length())
             }
         }
 
@@ -93,7 +86,7 @@ class ConverterUtils {
     }
 
     static Map jsonToMap(InputStream input, String encoding) {
-        new JsonSlurper().parse(new InputStreamReader(input, encoding)) as Map
+        (Map) new JsonSlurper().parse(new InputStreamReader(input, encoding))
     }
 
     /**

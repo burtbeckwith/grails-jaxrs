@@ -11,5 +11,5 @@ interface ResourceRegistrar {
      *
      * @return A list of resources to register with the {@link JaxrsContext}.
      */
-    List<Class<?>> getResourceClasses()
+    List<Class> getResourceClasses()
 }

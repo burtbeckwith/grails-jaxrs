@@ -11,7 +11,7 @@ class ${simpleName}ResourceService {
     def read(id) {
         def obj = ${simpleName}.get(id)
         if (!obj) {
-            throw new DomainObjectNotFoundException(${simpleName}.class, id)
+            throw new DomainObjectNotFoundException(${simpleName}, id)
         }
         obj
     }
@@ -23,7 +23,7 @@ class ${simpleName}ResourceService {
     def update(${simpleName} dto) {
         def obj = ${simpleName}.get(dto.id)
         if (!obj) {
-            throw new DomainObjectNotFoundException(${simpleName}.class, dto.id)
+            throw new DomainObjectNotFoundException(${simpleName}, dto.id)
         }
         obj.properties = dto.properties
         obj

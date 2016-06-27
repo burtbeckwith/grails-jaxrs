@@ -15,6 +15,7 @@
  */
 package org.grails.plugins.jaxrs.core
 
+import groovy.transform.CompileStatic
 import org.springframework.web.filter.OncePerRequestFilter
 
 import javax.servlet.FilterChain
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse
  * @author Martin Krasser
  * @see JaxrsRequestWrapper
  */
+@CompileStatic
 class JaxrsFilter extends OncePerRequestFilter {
     /**
      * Stores the request URI as request attribute.

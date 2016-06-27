@@ -16,6 +16,7 @@
 package org.grails.plugins.jaxrs.artefact
 
 import grails.core.ArtefactHandlerAdapter
+import groovy.transform.CompileStatic
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -27,6 +28,7 @@ import javax.ws.rs.ext.MessageBodyWriter
  * @author Martin Krasser
  * @author Bud Byrd
  */
+@CompileStatic
 class ProviderArtefactHandler extends ArtefactHandlerAdapter {
     /**
      * The type of the artefact.
@@ -47,7 +49,7 @@ class ProviderArtefactHandler extends ArtefactHandlerAdapter {
      * Constructor.
      */
     ProviderArtefactHandler() {
-        super(TYPE, GrailsProviderClass.class, DefaultGrailsProviderClass.class, TYPE)
+        super(TYPE, GrailsProviderClass, DefaultGrailsProviderClass, TYPE)
     }
 
     /**
@@ -65,7 +67,7 @@ class ProviderArtefactHandler extends ArtefactHandlerAdapter {
 
         boolean match = JaxrsClassHelper.isJaxrsProvider(clazz)
         if (match) {
-            getLog().info("Detected JAX-RS provider: ${clazz.getName()}")
+            getLog().info('Detected JAX-RS provider: {}', clazz.getName())
         }
         return match
     }

@@ -1,5 +1,6 @@
 package org.grails.plugins.jaxrs.core
 
+import groovy.transform.CompileStatic
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
 import org.springframework.core.type.filter.AnnotationTypeFilter
 import org.springframework.util.ClassUtils
@@ -10,6 +11,7 @@ import javax.ws.rs.ext.Provider
 /**
  * An implementation of {@link ResourceRegistrar} that provides classpath scanning abilities to the registrar.
  */
+@CompileStatic
 class ScanningResourceRegistrar implements ResourceRegistrar {
     /**
      * A list of classpath packages to scan for resource classes.
@@ -40,7 +42,7 @@ class ScanningResourceRegistrar implements ResourceRegistrar {
      * @return A list of resources to register with the {@link JaxrsContext}.
      */
     @Override
-    List<Class<?>> getResourceClasses() {
+    List<Class> getResourceClasses() {
         return scan()
     }
 
@@ -49,16 +51,17 @@ class ScanningResourceRegistrar implements ResourceRegistrar {
      *
      * @return All found JAX-RS resources.
      */
-    private List<Class<?>> scan() {
+    private List<Class> scan() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false)
         scanner.addIncludeFilter(new AnnotationTypeFilter(Path))
         scanner.addIncludeFilter(new AnnotationTypeFilter(Provider))
 
-        List<Class<?>> classes = []
+        List<Class> classes = []
 
+        ClassLoader defaultClassloader = ClassUtils.getDefaultClassLoader()
         packages.each {
             classes.addAll(scanner.findCandidateComponents(it).collect {
-                ClassUtils.resolveClassName(it.getBeanClassName(), ClassUtils.getDefaultClassLoader())
+                ClassUtils.resolveClassName(it.getBeanClassName(), defaultClassloader)
             })
         }
 

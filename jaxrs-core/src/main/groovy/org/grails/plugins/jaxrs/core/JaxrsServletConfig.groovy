@@ -1,5 +1,7 @@
 package org.grails.plugins.jaxrs.core
 
+import groovy.transform.CompileStatic
+
 import javax.servlet.ServletConfig
 import javax.servlet.ServletContext
 
@@ -8,6 +10,7 @@ import javax.servlet.ServletContext
  *
  * @author Bud Byrd
  */
+@CompileStatic
 class JaxrsServletConfig implements ServletConfig {
     /**
      * Servlet initialization parameters.

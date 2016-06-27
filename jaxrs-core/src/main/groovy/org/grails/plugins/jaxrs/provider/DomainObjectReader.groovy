@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.provider
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.Consumes
 import javax.ws.rs.ext.Provider
 
@@ -28,10 +30,11 @@ import javax.ws.rs.ext.Provider
  *
  * @author Martin Krasser
  */
+@CompileStatic
 @Provider
 @Consumes(['text/xml', 'application/xml', 'text/x-json', 'application/json'])
 class DomainObjectReader extends DomainObjectReaderSupport {
     protected boolean isEnabled() {
-        !grailsApplication.config.org.grails.jaxrs.doreader.disable
+        !grailsApplication.config.getProperty('org.grails.jaxrs.doreader.disable', Boolean, false)
     }
 }

@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.core
 
+import groovy.transform.CompileStatic
+
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletRequestWrapper
 
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletRequestWrapper
  *
  * @see JaxrsFilter
  */
+@CompileStatic
 class JaxrsRequestWrapper extends HttpServletRequestWrapper {
     /**
      * Constructor.

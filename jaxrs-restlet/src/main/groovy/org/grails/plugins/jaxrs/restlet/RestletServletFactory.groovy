@@ -1,5 +1,6 @@
 package org.grails.plugins.jaxrs.restlet
 
+import groovy.transform.CompileStatic
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.grails.plugins.jaxrs.core.JaxrsServletConfig
 import org.grails.plugins.jaxrs.servlet.ServletFactory
@@ -11,6 +12,7 @@ import javax.servlet.Servlet
  *
  * @author Bud Byrd
  */
+@CompileStatic
 class RestletServletFactory implements ServletFactory {
     /**
      * Create the servlet instance for the implementation-specific provider.

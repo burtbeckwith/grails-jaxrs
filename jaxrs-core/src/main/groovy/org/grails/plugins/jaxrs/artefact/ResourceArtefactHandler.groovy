@@ -16,6 +16,7 @@
 package org.grails.plugins.jaxrs.artefact
 
 import grails.core.ArtefactHandlerAdapter
+import groovy.transform.CompileStatic
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory
  * @author Martin Krasser
  * @author Bud Byrd
  */
+@CompileStatic
 class ResourceArtefactHandler extends ArtefactHandlerAdapter {
     /**
      * The type of the artefact.
@@ -43,7 +45,7 @@ class ResourceArtefactHandler extends ArtefactHandlerAdapter {
      * Constructor.
      */
     ResourceArtefactHandler() {
-        super(TYPE, GrailsResourceClass.class, DefaultGrailsResourceClass.class, TYPE)
+        super(TYPE, GrailsResourceClass, DefaultGrailsResourceClass, TYPE)
     }
 
     /**
@@ -62,7 +64,7 @@ class ResourceArtefactHandler extends ArtefactHandlerAdapter {
 
         boolean match = JaxrsClassHelper.isJaxrsResource(clazz)
         if (match) {
-            getLog().info("Detected JAX-RS resource: " + clazz.getName())
+            getLog().info('Detected JAX-RS resource: {}', clazz.getName())
         }
         return match
     }

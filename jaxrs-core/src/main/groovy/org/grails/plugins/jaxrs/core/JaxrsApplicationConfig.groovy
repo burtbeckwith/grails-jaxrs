@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.core
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.core.Application
 
 /**
@@ -25,6 +27,7 @@ import javax.ws.rs.core.Application
  * @author Martin Krasser
  * @author Bud Byrd
  */
+@CompileStatic
 class JaxrsApplicationConfig extends Application {
     /**
      * Contains the resource and provider classes defined by a Grails JAX-RS
@@ -33,7 +36,7 @@ class JaxrsApplicationConfig extends Application {
      *
      * @return a mutable, synchronized set of resource and provider classes.
      */
-    Set<Class<?>> classes = Collections.synchronizedSet(new HashSet<Class<?>>())
+    Set<Class> classes = Collections.synchronizedSet(new HashSet<Class>())
 
     /**
      * Resets this configuration by emptying the set returned by

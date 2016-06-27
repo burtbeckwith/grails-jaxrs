@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.provider
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.Response
 
@@ -26,13 +28,14 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND
  *
  * @author Martin Krasser
  */
+@CompileStatic
 class DomainObjectNotFoundException extends WebApplicationException {
 
     /**
      * @param clazz Grails domain object clazz.
      * @param id Grails domain object id.
      */
-    DomainObjectNotFoundException(clazz, id) {
+    DomainObjectNotFoundException(Class clazz, id) {
         super(notFound(clazz, id))
     }
 
@@ -45,11 +48,11 @@ class DomainObjectNotFoundException extends WebApplicationException {
      * @param id Grails domain object id.
      * @return JAX-RS response.
      */
-    private static Response notFound(clazz, id) {
+    private static Response notFound(Class clazz, id) {
         Response.status(NOT_FOUND).entity(notFoundMessage(clazz, id)).type(APPLICATION_XML).build()
     }
 
-    private static String notFoundMessage(clazz, id) {
+    private static String notFoundMessage(Class clazz, id) {
         "<error>${clazz.simpleName} with id $id not found</error>"
     }
 }

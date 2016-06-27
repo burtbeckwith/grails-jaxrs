@@ -16,6 +16,7 @@
 package org.grails.plugins.jaxrs.provider
 
 import grails.converters.XML
+import groovy.transform.CompileStatic
 import org.grails.web.converters.configuration.ConvertersConfigurationHolder
 
 import javax.ws.rs.Produces
@@ -32,25 +33,32 @@ import javax.ws.rs.ext.Provider
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/xml') // or 'application/xml'
- * class NotesResource {*
- *      &#064;GET
- *      XML findNotes() {*          Note.findAll() as XML
- *}*
- *}* </pre>
+ * class NotesResource {
+ *
+ *     &#064;GET
+ *     XML findNotes() {
+ *         Note.findAll() as XML
+ *     }
+ * }
+ * </pre>
  *
  * Alternatively, one could write
  *
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/xml') // or 'application/xml'
- * class NotesResource {*
- *      &#064;GET
- *      Response findNotes() {*          Response.ok(Note.findAll() as XML).build()
- *}*
- *}* </pre>
+ * class NotesResource {
+ *
+ *     &#064;GET
+ *     Response findNotes() {
+ *         Response.ok(Note.findAll() as XML).build()
+ *     }
+ * }
+ * </pre>
  *
  * @author Martin Krasser
  */
+@CompileStatic
 @Provider
 @Produces(["text/xml", "application/xml"])
 class XMLWriter extends MessageBodyWriterSupport<XML> {
@@ -72,8 +80,8 @@ class XMLWriter extends MessageBodyWriterSupport<XML> {
     @Override
     protected void writeTo(XML xml, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
         throws IOException, WebApplicationException {
-        String charset = ConvertersConfigurationHolder.getConverterConfiguration(XML.class).getEncoding()
-        Writer writer = new OutputStreamWriter(entityStream, charset == null ? DEFAULT_CHARSET : charset)
+        String charset = ConvertersConfigurationHolder.getConverterConfiguration(XML).getEncoding()
+        Writer writer = new OutputStreamWriter(entityStream, charset ?: DEFAULT_CHARSET)
         xml.render(writer)
     }
 }

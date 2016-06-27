@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.provider
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.MultivaluedMap
@@ -30,6 +32,7 @@ import static org.grails.plugins.jaxrs.provider.ProviderUtils.getReaderTypeArgum
  * @param < T >  type of object to be read from the request entity.
  * @author Martin Krasser
  */
+@CompileStatic
 abstract class MessageBodyReaderSupport<T> extends ProviderSupport implements MessageBodyReader<T> {
 
     MessageBodyReaderSupport() {
@@ -39,13 +42,13 @@ abstract class MessageBodyReaderSupport<T> extends ProviderSupport implements Me
     /**
      * @see #isSupported(Class, Type, Annotation [ ], MediaType)
      */
-    boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    boolean isReadable(Class type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return isSupported(type, genericType, annotations, mediaType)
     }
 
     T readFrom(Class<T> type, Type genericType,
-                      Annotation[] annotations, MediaType mediaType,
-                      MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+               Annotation[] annotations, MediaType mediaType,
+               MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
         throws IOException, WebApplicationException {
         return readFrom(httpHeaders, entityStream)
     }

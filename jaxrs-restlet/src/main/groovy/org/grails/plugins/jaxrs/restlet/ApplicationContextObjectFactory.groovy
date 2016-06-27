@@ -1,8 +1,8 @@
 package org.grails.plugins.jaxrs.restlet
 
+import groovy.transform.CompileStatic
 import org.restlet.ext.jaxrs.InstantiateException
 import org.restlet.ext.jaxrs.ObjectFactory
-import org.springframework.beans.BeansException
 import org.springframework.context.ApplicationContext
 
 import javax.servlet.ServletContext
@@ -15,6 +15,7 @@ import static org.springframework.web.context.support.WebApplicationContextUtils
  *
  * @author Bud Byrd
  */
+@CompileStatic
 class ApplicationContextObjectFactory implements ObjectFactory {
     /**
      * Application context.

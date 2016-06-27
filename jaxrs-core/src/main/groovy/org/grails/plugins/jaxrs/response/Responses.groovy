@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.response
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.UriBuilder
 
@@ -31,6 +33,7 @@ import javax.ws.rs.core.UriBuilder
  *
  * @author Martin Krasser
  */
+@CompileStatic
 class Responses {
      /**
       * Creates a response to a POST operation with status code 201,
@@ -41,7 +44,7 @@ class Responses {
       * @return JAX-RS response.
       */
      static Response created(resource) {
-         URI uri = UriBuilder.fromPath(resource.id as String).build()
+         URI uri = UriBuilder.fromPath((String)resource['id']).build()
          Response.created(uri).entity(resource).build()
      }
 

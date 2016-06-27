@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.jaxrs.provider;
+package org.grails.plugins.jaxrs.provider
+
+import groovy.transform.CompileStatic
 
 /**
  * Thrown to indicate that the type argument to {@link MessageBodyWriterSupport}
@@ -21,6 +23,7 @@ package org.grails.plugins.jaxrs.provider;
  *
  * @author Martin Krasser
  */
+@CompileStatic
 class IllegalTypeException extends RuntimeException {
     IllegalTypeException(String message) {
         super(message)

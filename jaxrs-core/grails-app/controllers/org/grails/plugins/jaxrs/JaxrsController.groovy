@@ -15,6 +15,7 @@
  */
 package org.grails.plugins.jaxrs
 
+import groovy.transform.CompileStatic
 import org.grails.plugins.jaxrs.core.JaxrsContext
 import org.grails.plugins.jaxrs.core.JaxrsRequestWrapper
 import org.grails.plugins.jaxrs.core.JaxrsUtil
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse
  *
  * @author Martin Krasser
  */
+@CompileStatic
 class JaxrsController {
     /**
      * Default action to route requests to.
@@ -59,7 +61,7 @@ class JaxrsController {
         ServletResponse unwrapped = jaxrsUtil.unwrap(response)
 
         // Let the JAX-RS implementation process the request
-        jaxrsContext.process(new JaxrsRequestWrapper(request), unwrapped as HttpServletResponse)
+        jaxrsContext.process(new JaxrsRequestWrapper(request), (HttpServletResponse)unwrapped)
 
         // Marks the response as committed
         unwrapped.outputStream.flush()

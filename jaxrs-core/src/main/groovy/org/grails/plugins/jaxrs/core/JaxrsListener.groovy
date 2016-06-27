@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.core
 
+import groovy.transform.CompileStatic
+
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
 
@@ -23,6 +25,7 @@ import javax.servlet.ServletContextListener
  *
  * @author Martin Krasser
  */
+@CompileStatic
 class JaxrsListener implements ServletContextListener {
     void contextDestroyed(ServletContextEvent event) {
         JaxrsUtil.getInstance(event.servletContext).getJaxrsContext().destroy()

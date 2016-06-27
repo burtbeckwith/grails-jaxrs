@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.provider
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.Produces
 import javax.ws.rs.ext.MessageBodyWriter
 import javax.ws.rs.ext.Provider
@@ -31,6 +33,7 @@ import javax.ws.rs.ext.Provider
  *
  * @author Martin Krasser
  */
+@CompileStatic
 @Provider
 @Produces(['text/xml', 'application/xml', 'text/x-json', 'application/json'])
 class DomainObjectWriter extends DomainObjectWriterSupport implements MessageBodyWriter<Object> {
@@ -42,10 +45,10 @@ class DomainObjectWriter extends DomainObjectWriterSupport implements MessageBod
      */
 
     protected boolean isEnabled() {
-        !grailsApplication.config.org.grails.jaxrs.dowriter.disable
+        !grailsApplication.config.getProperty('org.grails.jaxrs.dowriter.disable', Boolean, false)
     }
 
     protected boolean isRequireGenericCollection() {
-        grailsApplication.config.org.grails.jaxrs.dowriter.require.generic.collections
+        grailsApplication.config.getProperty('org.grails.jaxrs.dowriter.require.generic.collections', Boolean, false)
     }
 }

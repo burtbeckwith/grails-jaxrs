@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.artefact
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.MessageBodyReader
 import javax.ws.rs.ext.MessageBodyWriter
@@ -27,6 +29,7 @@ import java.lang.reflect.Method
  *
  * @author Martin Krasser
  */
+@CompileStatic
 class JaxrsClassHelper {
     /**
      * Determines whether a given annotation can be considered a JAX-RS annotation.
@@ -44,8 +47,8 @@ class JaxrsClassHelper {
      * @param clazz
      * @return
      */
-    static boolean jaxrsClassCondition(Class<?> clazz) {
-        return clazz.declaredAnnotations.any { jaxrsAnnotationCondition it }
+    static boolean jaxrsClassCondition(Class clazz) {
+        return clazz.declaredAnnotations.any { Annotation a -> jaxrsAnnotationCondition a }
     }
 
     /**
@@ -55,7 +58,7 @@ class JaxrsClassHelper {
      * @return
      */
     static boolean jaxrsMethodCondition(Method method) {
-        return method.declaredAnnotations.any { jaxrsAnnotationCondition it }
+        return method.declaredAnnotations.any { Annotation a -> jaxrsAnnotationCondition a }
     }
 
     /**
@@ -64,8 +67,8 @@ class JaxrsClassHelper {
      * @param clazz
      * @return
      */
-    static boolean jaxrsMethodsCondition(Class<?> clazz) {
-        return clazz.declaredMethods.any { jaxrsMethodCondition it }
+    static boolean jaxrsMethodsCondition(Class clazz) {
+        return clazz.declaredMethods.any { Method m -> jaxrsMethodCondition m }
     }
 
     /**
@@ -122,7 +125,7 @@ class JaxrsClassHelper {
 
         return (visitor(clazz) ||
             walkJaxrsResource(clazz.superclass, visitor) ||
-            clazz.interfaces.any { walkJaxrsResource(it, visitor) }
+            clazz.interfaces.any { Class iface -> walkJaxrsResource(iface, visitor) }
         )
     }
 }

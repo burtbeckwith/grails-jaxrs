@@ -19,6 +19,7 @@ import grails.converters.JSON
 import grails.converters.XML
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
+import groovy.transform.CompileStatic
 import org.grails.core.artefact.DomainClassArtefactHandler
 
 import javax.ws.rs.WebApplicationException
@@ -71,12 +72,13 @@ import static ProviderUtils.*
  *
  * @author Martin Krasser
  */
+@CompileStatic
 abstract class DomainObjectWriterSupport implements MessageBodyWriter<Object>, GrailsApplicationAware {
 
     GrailsApplication grailsApplication
 
-    long getSize(Object t, Class type, Type genericType,
-            Annotation[] annotations, MediaType mediaType) {
+    long getSize(t, Class type, Type genericType,
+                 Annotation[] annotations, MediaType mediaType) {
         -1
     }
 
@@ -87,7 +89,7 @@ abstract class DomainObjectWriterSupport implements MessageBodyWriter<Object>, G
      * <code>text/x-json</code> or <code>application/json</code>.
      */
     boolean isWriteable(Class type, Type genericType,
-            Annotation[] annotations, MediaType mediaType) {
+                        Annotation[] annotations, MediaType mediaType) {
 
         if (!isEnabled()) {
             return false
@@ -101,9 +103,11 @@ abstract class DomainObjectWriterSupport implements MessageBodyWriter<Object>, G
             // simplicity. It is expected that returned collections
             // from resource methods always contains domain objects.
             return compatibleMediaType
-        } else if (genericType instanceof ParameterizedType) {
+        }
+        if (genericType instanceof ParameterizedType) {
             return isDomainObjectCollectionType(genericType)
-        } else if (DomainClassArtefactHandler.isDomainClass(type)) {
+        }
+        if (DomainClassArtefactHandler.isDomainClass(type)) {
             return compatibleMediaType
         }
         return false
@@ -113,9 +117,9 @@ abstract class DomainObjectWriterSupport implements MessageBodyWriter<Object>, G
       * Creates an XML or JSON response entity stream from a Grails domain
       * object.
       */
-    void writeTo(Object t, Class type, Type genericType,
-            Annotation[] annotations, MediaType mediaType,
-            MultivaluedMap httpHeaders, OutputStream entityStream)
+    void writeTo(t, Class type, Type genericType,
+                 Annotation[] annotations, MediaType mediaType,
+                 MultivaluedMap httpHeaders, OutputStream entityStream)
             throws IOException, WebApplicationException {
 
         if (isXmlType(mediaType)) {
@@ -148,28 +152,24 @@ abstract class DomainObjectWriterSupport implements MessageBodyWriter<Object>, G
     /**
      * Creates an XML response entity stream from a Grails domain object.
      */
-    protected Object writeToXml(Object t, OutputStream entityStream, String charset) {
-        def writer = new OutputStreamWriter(entityStream, charset)
-        def converter = new XML(t)
-        converter.render(writer)
+    protected writeToXml(Object t, OutputStream entityStream, String charset) {
+        new XML(t).render(new OutputStreamWriter(entityStream, charset))
     }
 
     /**
      * Creates a JSON response entity stream from a Grails domain object.
      */
-    protected Object writeToJson(Object t, OutputStream entityStream, String charset) {
-        def writer = new OutputStreamWriter(entityStream, charset)
-        def converter = new JSON(t)
-        converter.render(writer)
+    protected writeToJson(t, OutputStream entityStream, String charset) {
+        new JSON(t).render(new OutputStreamWriter(entityStream, charset))
     }
 
     private boolean isDomainObjectCollectionType(ParameterizedType genericType) {
-        if (!Collection.isAssignableFrom(genericType.rawType)) {
+        if (!Collection.isAssignableFrom((Class) genericType.rawType)) {
             return false
         }
         if (genericType.actualTypeArguments.length == 0) {
             return false
         }
-        return DomainClassArtefactHandler.isDomainClass(genericType.actualTypeArguments[0])
+        return DomainClassArtefactHandler.isDomainClass((Class) genericType.actualTypeArguments[0])
     }
 }

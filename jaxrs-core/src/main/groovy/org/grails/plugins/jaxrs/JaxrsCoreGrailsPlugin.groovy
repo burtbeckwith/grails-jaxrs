@@ -1,6 +1,8 @@
 package org.grails.plugins.jaxrs
 
 import grails.plugins.Plugin
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.plugins.jaxrs.artefact.ProviderArtefactHandler
 import org.grails.plugins.jaxrs.artefact.ResourceArtefactHandler
@@ -13,6 +15,7 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.embedded.ServletListenerRegistrationBean
 import org.springframework.core.Ordered
 
+@CompileStatic
 @Slf4j
 class JaxrsCoreGrailsPlugin extends Plugin {
     /**
@@ -94,6 +97,7 @@ mechanism for implementing  RESTful web services.
      * Adds the JaxrsContext and plugin- and application-specific JAX-RS
      * resource and provider classes to the application context.
      */
+    @CompileDynamic
     Closure doWithSpring() {
         { ->
             jaxrsListener(ServletListenerRegistrationBean) {
@@ -163,8 +167,8 @@ mechanism for implementing  RESTful web services.
             return
         }
 
-        boolean isResource = grailsApplication.isArtefactOfType(ResourceArtefactHandler.TYPE, event.source as Class)
-        boolean isProvider = grailsApplication.isArtefactOfType(ProviderArtefactHandler.TYPE, event.source as Class)
+        boolean isResource = grailsApplication.isArtefactOfType(ResourceArtefactHandler.TYPE, (Class) event.source)
+        boolean isProvider = grailsApplication.isArtefactOfType(ProviderArtefactHandler.TYPE, (Class) event.source)
 
         if (!isResource && !isProvider) {
             return
@@ -188,11 +192,7 @@ mechanism for implementing  RESTful web services.
      * @return
      */
     String getResourceScope() {
-        def scope = grailsApplication.config.org.grails.jaxrs.resource.scope
-        if (!scope) {
-            scope = 'prototype'
-        }
-        return scope
+        grailsApplication.config.getProperty('org.grails.jaxrs.resource.scope', String, 'prototype')
     }
 
     /**
@@ -202,9 +202,6 @@ mechanism for implementing  RESTful web services.
      * @return
      */
     private boolean isPluginEnabled() {
-        if (getGrailsApplication().config.org.grails.jaxrs.enabled == false) {
-            return false
-        }
-        return true
+        grailsApplication.config.getProperty('org.grails.jaxrs.enabled', Object, null) != false
     }
 }

@@ -16,6 +16,7 @@
 package org.grails.plugins.jaxrs.provider
 
 import grails.converters.JSON
+import groovy.transform.CompileStatic
 import org.grails.web.converters.configuration.ConvertersConfigurationHolder
 
 import javax.ws.rs.Produces
@@ -33,25 +34,32 @@ import javax.ws.rs.ext.Provider
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/x-json') // or 'application/json'
- * class NotesResource {*
- *      &#064;GET
- *      XML findNotes() {*          Note.findAll() as JSON
- *}*
- *}* </pre>
+ * class NotesResource {
+ *
+ *     &#064;GET
+ *     XML findNotes() {
+ *         Note.findAll() as JSON
+ *     }
+ * }
+ *</pre>
  *
  * Alternatively, one could write
  *
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/x-json') // or 'application/json'
- * class NotesResource {*
- *      &#064;GET
- *      Response findNotes() {*          Response.ok(Note.findAll() as JSON).build()
- *}*
- *}* </pre>
+ * class NotesResource {
+ *
+ *     &#064;GET
+ *     Response findNotes() {
+ *         Response.ok(Note.findAll() as JSON).build()
+ *     }
+ * }
+ * </pre>
  *
  * @author Martin Krasser
  */
+@CompileStatic
 @Provider
 @Produces(["text/x-json", "application/json"])
 class JSONWriter extends MessageBodyWriterSupport<JSON> {
@@ -73,14 +81,8 @@ class JSONWriter extends MessageBodyWriterSupport<JSON> {
     @Override
     protected void writeTo(JSON json, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
         throws IOException, WebApplicationException {
-        String charset = ConvertersConfigurationHolder.getConverterConfiguration(JSON.class).getEncoding()
-        Writer writer
-        if (charset == null) {
-            writer = new OutputStreamWriter(entityStream, DEFAULT_CHARSET)
-        }
-        else {
-            writer = new OutputStreamWriter(entityStream, charset)
-        }
+        String charset = ConvertersConfigurationHolder.getConverterConfiguration(JSON).getEncoding()
+        Writer writer = new OutputStreamWriter(entityStream, charset ?: DEFAULT_CHARSET)
         json.render(writer)
     }
 }

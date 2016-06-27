@@ -15,6 +15,7 @@
  */
 package org.grails.plugins.jaxrs.restlet
 
+import groovy.transform.CompileStatic
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.restlet.Application
 import org.restlet.Context
@@ -26,6 +27,7 @@ import org.restlet.ext.servlet.ServerServlet
  *
  * @author Martin Krasser
  */
+@CompileStatic
 class RestletServlet extends ServerServlet {
     /**
      * JAX-RS Application.

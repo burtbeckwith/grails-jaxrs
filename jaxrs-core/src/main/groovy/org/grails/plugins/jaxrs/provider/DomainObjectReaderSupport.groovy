@@ -18,6 +18,7 @@ package org.grails.plugins.jaxrs.provider
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
 import grails.web.databinding.DataBindingUtils
+import groovy.transform.CompileStatic
 import org.grails.core.artefact.DomainClassArtefactHandler
 import org.springframework.validation.BindingResult
 
@@ -42,18 +43,20 @@ import static ProviderUtils.isXmlType
  *
  * <pre>
  * &#064;Path('/notes')
- * class NotesResource {*
- *      &#064;POST
- *      &#064;Consumes(['application/xml','application/json'])
- *      Response addNote(Note note) {*          note.save()
- *          // ...
- *}*
- *}*
+ * class NotesResource {
  *
+ *     &#064;POST
+ *     &#064;Consumes(['application/xml','application/json'])
+ *     Response addNote(Note note) {
+ *         note.save()
+ *         // ...
+ *     }
+ * }
  * </pre>
  *
  * @author Martin Krasser
  */
+@CompileStatic
 abstract class DomainObjectReaderSupport implements MessageBodyReader<Object>, GrailsApplicationAware {
 
     GrailsApplication grailsApplication
@@ -87,7 +90,7 @@ abstract class DomainObjectReaderSupport implements MessageBodyReader<Object>, G
         }
 
         String resolvedEncoding = ConverterUtils.getEncoding(httpHeaders, mediaType, defaultEncoding)
-        BindingResult result = DataBindingUtils.bindObjectToInstance(domainInstance, new InputStreamReader(entityStream, resolvedEncoding))
+        /*BindingResult result =*/ DataBindingUtils.bindObjectToInstance(domainInstance, new InputStreamReader(entityStream, resolvedEncoding))
 
         return domainInstance
     }

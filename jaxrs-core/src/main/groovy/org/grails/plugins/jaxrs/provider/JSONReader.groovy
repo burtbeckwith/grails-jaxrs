@@ -17,6 +17,7 @@ package org.grails.plugins.jaxrs.provider
 
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
+import groovy.transform.CompileStatic
 
 import javax.ws.rs.Consumes
 import javax.ws.rs.WebApplicationException
@@ -40,32 +41,30 @@ import static org.grails.plugins.jaxrs.provider.ConverterUtils.jsonToMap
  * <pre>
  * &#064;Path('/notes')
  * &#064;Produces('text/x-json')
- * class NotesResource {*
- *      &#064;POST
- *      &#064;Consumes('text/x-json')
- *      Response addNote(Map properties) {*          // create ne Note domain object
- *          def note = new Note(properties).save()
- *}*
- *}*
+ * class NotesResource {
  *
+ *     &#064;POST
+ *     &#064;Consumes('text/x-json')
+ *     Response addNote(Map properties) {
+ *         // create new Note domain object
+ *         def note = new Note(properties).save()
+ *     }
+ * }
  * </pre>
  *
  * @author Martin Krasser
  */
+@CompileStatic
 @Provider
 @Consumes(["text/x-json", "application/json"])
 class JSONReader extends MessageBodyReaderSupport<Map> implements GrailsApplicationAware {
 
-    private GrailsApplication grailsApplication
-
-    void setGrailsApplication(GrailsApplication grailsApplication) {
-        this.grailsApplication = grailsApplication
-    }
+    GrailsApplication grailsApplication
 
     @Override
     Map readFrom(Class<Map> type, Type genericType,
-                        Annotation[] annotations, MediaType mediaType,
-                        MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
+                 Annotation[] annotations, MediaType mediaType,
+                 MultivaluedMap<String, String> httpHeaders, InputStream entityStream)
         throws IOException, WebApplicationException {
 
         String encoding = ConverterUtils.getEncoding(httpHeaders, mediaType, getDefaultEncoding(grailsApplication))
@@ -76,9 +75,9 @@ class JSONReader extends MessageBodyReaderSupport<Map> implements GrailsApplicat
 
     @Override
     Map readFrom(MultivaluedMap<String, String> httpHeaders,
-                        InputStream entityStream) throws IOException,
+                 InputStream entityStream) throws IOException,
         WebApplicationException {
         // TODO: Fix MessageBodyReaderSupport abstract method (remove it completely or add empty implementation?)
-        throw new RuntimeException("This should never be called, because we override the readFrom(all-parameters) method.")
+        throw new IllegalStateException("This should never be called, because we override the readFrom(all-parameters) method.")
     }
 }

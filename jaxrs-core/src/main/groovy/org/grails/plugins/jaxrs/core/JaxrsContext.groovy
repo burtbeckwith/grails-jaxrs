@@ -15,10 +15,12 @@
  */
 package org.grails.plugins.jaxrs.core
 
+import groovy.transform.CompileStatic
 import org.grails.plugins.jaxrs.servlet.ServletFactory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.util.Assert
 
 import javax.servlet.Servlet
 import javax.servlet.ServletContext
@@ -35,6 +37,7 @@ import javax.ws.rs.ext.RuntimeDelegate
  * @author David Castro
  * @author Bud Byrd
  */
+@CompileStatic
 class JaxrsContext implements InitializingBean {
     /**
      * Name of the JAX-RS servlet.
@@ -89,9 +92,7 @@ class JaxrsContext implements InitializingBean {
      * @throws ServletException
      */
     void init() throws ServletException {
-        if (jaxrsServlet) {
-            throw new IllegalStateException("can not start the JAX-RS servlet because has already been started")
-        }
+        Assert.isNull jaxrsServlet, "can not start the JAX-RS servlet because has already been started"
 
         RuntimeDelegate.setInstance(null)
 
@@ -134,25 +135,12 @@ class JaxrsContext implements InitializingBean {
      * @throws IOException
      */
     void process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (!jaxrsServlet) {
-            throw new IllegalStateException("can not service a JAX-RS request because no servlet has been started")
-        }
+        Assert.notNull jaxrsServlet, "can not service a JAX-RS request because no servlet has been started"
         jaxrsServlet.service(request, response)
     }
 
-    /**
-     * Invoked by a BeanFactory after it has set all bean properties supplied
-     * (and satisfied BeanFactoryAware and ApplicationContextAware).
-     * <p>This method allows the bean instance to perform initialization only
-     * possible when all bean properties have been set and to throw an
-     * exception in the event of misconfiguration.
-     * @throws Exception in the event of misconfiguration (such
-     * as failure to set an essential property) or if initialization fails.
-     */
     @Override
-    void afterPropertiesSet() throws Exception {
-        if (!jaxrsServletFactory) {
-            throw new NullPointerException("the 'jaxrsServletFactory' Spring bean is not set")
-        }
+    void afterPropertiesSet() {
+        Assert.notNull jaxrsServletFactory, "the 'jaxrsServletFactory' Spring bean is not set"
     }
 }

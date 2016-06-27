@@ -15,6 +15,8 @@
  */
 package org.grails.plugins.jaxrs.provider
 
+import groovy.transform.CompileStatic
+
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.MultivaluedMap
@@ -28,10 +30,11 @@ import java.lang.reflect.Type
  * @param < T >  type of object to be written to the response entity.
  * @author Martin Krasser
  */
+@CompileStatic
 abstract class MessageBodyWriterSupport<T> extends ProviderSupport implements MessageBodyWriter<T> {
 
     MessageBodyWriterSupport() {
-        setTypeArgument(ProviderUtils.getWriterTypeArgument(this));
+        setTypeArgument(ProviderUtils.getWriterTypeArgument(this))
     }
 
     /**
@@ -44,14 +47,14 @@ abstract class MessageBodyWriterSupport<T> extends ProviderSupport implements Me
     /**
      * @see #isSupported(Class, Type, Annotation [ ], MediaType)
      */
-    boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+    boolean isWriteable(Class type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return isSupported(type, genericType, annotations, mediaType)
     }
 
     void writeTo(T t, Class<?> type, Type genericType,
-                        Annotation[] annotations, MediaType mediaType,
-                        MultivaluedMap<String, Object> httpHeaders,
-                        OutputStream entityStream) throws IOException,
+                 Annotation[] annotations, MediaType mediaType,
+                 MultivaluedMap<String, Object> httpHeaders,
+                 OutputStream entityStream) throws IOException,
         WebApplicationException {
         writeTo(t, httpHeaders, entityStream)
     }
@@ -67,5 +70,5 @@ abstract class MessageBodyWriterSupport<T> extends ProviderSupport implements Me
      * @throws WebApplicationException
      */
     protected abstract void writeTo(T t, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream)
-        throws IOException, WebApplicationException;
+        throws IOException, WebApplicationException
 }

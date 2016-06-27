@@ -6,6 +6,7 @@ import com.sun.jersey.api.core.ResourceConfig
 import com.sun.jersey.spi.container.servlet.WebConfig
 import com.sun.jersey.spi.spring.container.servlet.SpringServlet
 import grails.core.GrailsApplication
+import groovy.transform.CompileStatic
 import org.grails.plugins.jaxrs.core.JaxrsApplicationConfig
 import org.grails.plugins.jaxrs.core.JaxrsServletConfig
 import org.grails.plugins.jaxrs.servlet.ServletFactory
@@ -18,6 +19,7 @@ import javax.servlet.ServletException
  *
  * @author Bud Byrd
  */
+@CompileStatic
 class JerseyServletFactory implements ServletFactory {
     /**
      * Grails Application bean.
@@ -75,7 +77,7 @@ class JerseyServletFactory implements ServletFactory {
      */
     String getProviderExtraPaths() {
         // TODO: change this path to be jersey1-specific
-        def paths = grailsApplication.config.org.grails.jaxrs.provider.extra.paths
+        def paths = grailsApplication.config.getProperty('org.grails.jaxrs.provider.extra.paths', Object, null)
 
         if (!(paths instanceof String) || !paths) {
             return null
